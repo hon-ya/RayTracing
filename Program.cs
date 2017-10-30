@@ -21,11 +21,21 @@ namespace RayTracing
             builder.AppendFormat($"{nx} {ny}\n");
             builder.AppendFormat($"255\n");
 
+            var lowerLeftCorner = new Vector3(-2.0f, -1.0f, -1.0f);
+            var horizontal = new Vector3(4.0f, 0.0f, 0.0f);
+            var vertical = new Vector3(0.0f, 2.0f, 0.0f);
+            var origin = new Vector3(0.0f);
+
             for (var j = ny - 1; j >= 0; j--)
             {
                 for (var i = 0; i < nx; i++)
                 {
-                    var color = new Color3(1.0f * i / nx, 1.0f * j / ny, 0.2f);
+                    var u = 1.0f * i / nx;
+                    var v = 1.0f * j / ny;
+
+                    var ray = new Ray(origin, lowerLeftCorner + u * horizontal + v * vertical);
+                    var color = GetColor(ray);
+
                     var ir = (int)(255.99 * color.Red);
                     var ig = (int)(255.99 * color.Green);
                     var ib = (int)(255.99 * color.Blue);
@@ -35,6 +45,13 @@ namespace RayTracing
             }
 
             File.WriteAllText("output.ppm", builder.ToString());
+        }
+
+        static Color3 GetColor(Ray ray)
+        {
+            var directionUnit = Vector3.Normalize(ray.Direction);
+            var t = 0.5f * (directionUnit.Y + 1.0f);
+            return (1.0f - t) * new Color3(1.0f) + t * new Color3(0.5f, 0.7f, 1.0f);
         }
     }
 }
