@@ -49,9 +49,25 @@ namespace RayTracing
 
         static Color3 GetColor(Ray ray)
         {
+            if(HitSphere(new Vector3(0.0f, 0.0f, -1.0f), 0.5f, ray))
+            {
+                return new Color3(1.0f, 0.0f, 0.0f);
+            }
+
             var directionUnit = Vector3.Normalize(ray.Direction);
             var t = 0.5f * (directionUnit.Y + 1.0f);
             return (1.0f - t) * new Color3(1.0f) + t * new Color3(0.5f, 0.7f, 1.0f);
+        }
+
+        static bool HitSphere(Vector3 center, float radius, Ray ray)
+        {
+            var oc = ray.Position - center;
+            var a = Vector3.Dot(ray.Direction, ray.Direction);
+            var b = 2.0 * Vector3.Dot(oc, ray.Direction);
+            var c = Vector3.Dot(oc, oc) - radius * radius;
+            var discriminant = b * b - 4 * a * c;
+
+            return discriminant > 0;
         }
     }
 }
