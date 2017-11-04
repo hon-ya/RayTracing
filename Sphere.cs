@@ -7,11 +7,13 @@ namespace RayTracing
     {
         public Vector3 Center { get; set; }
         public float Radius { get; set; }
+        public IMaterial Material { get; set; }
 
-        public Sphere(Vector3 center, float radius)
+        public Sphere(Vector3 center, float radius, IMaterial material)
         {
             Center = center;
             Radius = radius;
+            Material = material;
         }
 
         public HitRecord? Hit(Ray ray, float tMin, float tMax)
@@ -31,7 +33,7 @@ namespace RayTracing
                     var position = ray.GetPoint(t);
                     var normal = (position - Center) / Radius;
 
-                    return new HitRecord { T = t, Position = position, Normal = normal };
+                    return new HitRecord { T = t, Position = position, Normal = normal, Material = Material };
                 }
 
                 var t2 = (-b + (float)Math.Sqrt(discriminant)) / a;
@@ -41,7 +43,7 @@ namespace RayTracing
                     var position = ray.GetPoint(t);
                     var normal = (position - Center) / Radius;
 
-                    return new HitRecord { T = t, Position = position, Normal = normal };
+                    return new HitRecord { T = t, Position = position, Normal = normal, Material = Material };
                 }
             }
 

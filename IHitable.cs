@@ -7,6 +7,7 @@ namespace RayTracing
         public float T;
         public Vector3 Position;
         public Vector3 Normal;
+        public IMaterial Material;
     }
 
     public interface IHitable
