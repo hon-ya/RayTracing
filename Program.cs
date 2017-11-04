@@ -1,10 +1,7 @@
 ﻿using SharpDX;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RayTracing
 {
@@ -49,25 +46,36 @@ namespace RayTracing
 
         static Color3 GetColor(Ray ray)
         {
-            if(HitSphere(new Vector3(0.0f, 0.0f, -1.0f), 0.5f, ray))
+            var t = HitSphere(new Vector3(0.0f, 0.0f, -1.0f), 0.5f, ray);
+            if (t > 0.0f)
             {
-                return new Color3(1.0f, 0.0f, 0.0f);
+                var n = Vector3.Normalize(ray.GetPoint(t) - new Vector3(0.0f, 0.0f, -1.0f));
+                return 0.5f * new Vector3(n.X + 1, n.Y + 1, n.Z + 1);
             }
 
             var directionUnit = Vector3.Normalize(ray.Direction);
-            var t = 0.5f * (directionUnit.Y + 1.0f);
+            t = 0.5f * (directionUnit.Y + 1.0f);
             return (1.0f - t) * new Color3(1.0f) + t * new Color3(0.5f, 0.7f, 1.0f);
         }
 
-        static bool HitSphere(Vector3 center, float radius, Ray ray)
+        static float HitSphere(Vector3 center, float radius, Ray ray)
         {
             var oc = ray.Position - center;
             var a = Vector3.Dot(ray.Direction, ray.Direction);
-            var b = 2.0 * Vector3.Dot(oc, ray.Direction);
+            var b = 2.0f * Vector3.Dot(oc, ray.Direction);
             var c = Vector3.Dot(oc, oc) - radius * radius;
             var discriminant = b * b - 4 * a * c;
 
-            return discriminant > 0;
+            if(discriminant < 0)
+            {
+                return -1.0f;
+            }
+            else
+            {
+                return (-b - (float)Math.Sqrt(discriminant)) / (2.0f * a);
+            }
         }
+
+        
     }
 }
