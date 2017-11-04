@@ -13,6 +13,7 @@ namespace RayTracing
 
             var nx = 200;
             var ny = 100;
+            var ns = 100;
 
             builder.AppendFormat($"P3\n");
             builder.AppendFormat($"{nx} {ny}\n");
@@ -29,16 +30,25 @@ namespace RayTracing
                 new Sphere(new Vector3(0.0f, -100.5f, -1.0f), 100.0f),
             };
             var world = new HitableList(hitables);
+            var camera = new Camera();
+            var random = new Random();
 
             for (var j = ny - 1; j >= 0; j--)
             {
                 for (var i = 0; i < nx; i++)
                 {
-                    var u = 1.0f * i / nx;
-                    var v = 1.0f * j / ny;
+                    var color = Color3.Black;
 
-                    var ray = new Ray(origin, lowerLeftCorner + u * horizontal + v * vertical);
-                    var color = GetColor(ray, world);
+                    for (var s = 0; s < ns; s++)
+                    {
+                        var u = (1.0f * i + random.NextFloat(0.0f, 1.0f)) / nx;
+                        var v = (1.0f * j + random.NextFloat(0.0f, 1.0f)) / ny;
+
+                        var ray = camera.GetRay(u, v);
+                        color += GetColor(ray, world);
+                    }
+
+                    color = Vector3.Divide(color, ns);
 
                     var ir = (int)(255.99f * color.Red);
                     var ig = (int)(255.99f * color.Green);
