@@ -18,31 +18,47 @@ namespace RayTracing
 
             Vector3 outwardNormal;
             float niOverNt; // 屈折率の比
+            float reflectProbe;
+            float cos;
+            Ray scattered;
+            var reflected = Vector3.Reflect(rayIn.Direction, hitRecord.Normal);
 
             if (Vector3.Dot(rayIn.Direction, hitRecord.Normal) > 0)
             {
                 // 物質から大気へ光が入る場合
                 outwardNormal = -hitRecord.Normal;
                 niOverNt = RefractiveIndex / airRefractiveIndex;
+                cos = RefractiveIndex * Vector3.Dot(rayIn.Direction, hitRecord.Normal) / rayIn.Direction.Length();
             }
             else
             {
                 // 大気から物質へ光が入る場合
                 outwardNormal = hitRecord.Normal;
                 niOverNt = airRefractiveIndex / RefractiveIndex;
+                cos = -Vector3.Dot(rayIn.Direction, hitRecord.Normal) / rayIn.Direction.Length();
             }
 
             var result = Refract(rayIn.Direction, outwardNormal, niOverNt);
             if (result.HasValue)
             {
-                var refracted = result.Value;
-                var scattered = new Ray(hitRecord.Position, refracted);
-                return new ScatterRecord {Scattered = scattered, Attenuation = Vector3.One};
+                // フレネル反射率に応じて、反射光と屈折光のどちらを返すかを決定する
+                reflectProbe = Schlick(cos, RefractiveIndex);
+                if (Base.Random.NextFloat(0.0f, 1.0f) <= reflectProbe)
+                {
+                    scattered = new Ray(hitRecord.Position, reflected);
+                }
+                else
+                {
+                    var refracted = result.Value;
+                    scattered = new Ray(hitRecord.Position, refracted);
+                }
             }
             else
             {
-                return null;
+                scattered = new Ray(hitRecord.Position, reflected);
             }
+
+            return new ScatterRecord { Scattered = scattered, Attenuation = Vector3.One };
         }
 
         // スネルの法則
@@ -59,6 +75,15 @@ namespace RayTracing
             {
                 return null;
             }
+        }
+
+        // Schlick approximation, フレネル反射率の近似
+        private float Schlick(float cos, float refractiveIndex)
+        {
+            float r0 = (1.0f - refractiveIndex) / (1 + refractiveIndex);
+            r0 = r0 * r0;
+
+            return r0 + (1 - r0) * (float)Math.Pow(1 - cos, 5);
         }
     }
 }
