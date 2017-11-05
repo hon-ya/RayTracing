@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Base.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="Dielectric.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="HitableList.cs" />
     <Compile Include="IHitable.cs" />
