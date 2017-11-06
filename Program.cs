@@ -24,16 +24,14 @@ namespace RayTracing
             var vertical = new Vector3(0.0f, 2.0f, 0.0f);
             var origin = new Vector3(0.0f);
 
+            var R = (float)Math.Cos(Math.PI / 4);
             var hitables = new IHitable[]
             {
-                new Sphere(new Vector3(0.0f, 0.0f, -1.0f), 0.5f, new Lambertian(new Vector3(0.1f, 0.2f, 0.5f))),
-                new Sphere(new Vector3(0.0f, -100.5f, -1.0f), 100.0f, new Lambertian(new Vector3(0.8f, 0.8f, 0.0f))),
-                new Sphere(new Vector3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(new Vector3(0.8f, 0.6f, 0.2f), 0.0f)),
-                new Sphere(new Vector3(-1.0f, 0.0f, -1.0f), 0.5f, new Dielectric(1.5f)),
-                new Sphere(new Vector3(-1.0f, 0.0f, -1.0f), -0.45f, new Dielectric(1.5f)),
+                new Sphere(new Vector3(-R, 0.0f, -1.0f), R, new Lambertian(new Vector3(0.0f, 0.0f, 1.0f))),
+                new Sphere(new Vector3( R, 0.0f, -1.0f), R, new Lambertian(new Vector3(1.0f, 0.0f, 0.0f))),
             };
             var world = new HitableList(hitables);
-            var camera = new Camera();
+            var camera = new Camera(90.0f, 1.0f * nx / ny);
 
             for (var j = ny - 1; j >= 0; j--)
             {
