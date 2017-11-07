@@ -21,5 +21,19 @@ namespace RayTracing
                 }
             }
         }
+
+
+        public static Vector3 NextInUnitDisk(this Random random)
+        {
+            while (true)
+            {
+                var max = new Vector3(1.0f, 1.0f, 0.0f);
+                var p = 2.0f * random.NextVector3(Vector3.Zero, max) - max;
+                if (Vector3.Dot(p, p) < 1.0f)
+                {
+                    return p;
+                }
+            }
+        }
     }
 }

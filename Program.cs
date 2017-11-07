@@ -33,7 +33,13 @@ namespace RayTracing
                 new Sphere(new Vector3(-1.0f, 0.0f, -1.0f), -0.45f, new Dielectric(1.5f)),
             };
             var world = new HitableList(hitables);
-            var camera = new Camera(new Vector3(-2.0f, 2.0f, 1.0f), new Vector3(0.0f, 0.0f, -1.0f), new Vector3(0.0f, 1.0f, 0.0f),  30.0f, 1.0f * nx / ny);
+
+            var lookFrom = new Vector3(3.0f, 3.0f, 2.0f);
+            var lookAt = new Vector3(0.0f, 0.0f, -1.0f);
+            var focusDistance = (lookFrom - lookAt).Length();
+            var aperture = 1.0f;
+            var up = new Vector3(0.0f, 1.0f, 0.0f);
+            var camera = new Camera(lookFrom, lookAt, up, 20.0f, 1.0f * nx / ny, aperture, focusDistance);
 
             for (var j = ny - 1; j >= 0; j--)
             {
