@@ -35,5 +35,10 @@ namespace RayTracing
                 }
             }
         }
+
+        public static float NextInUnitFloat(this Random random)
+        {
+            return random.NextFloat(0.0f, 1.0f);
+        }
     }
 }
