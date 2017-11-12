@@ -12,8 +12,8 @@ namespace RayTracing
         {
             var builder = new StringBuilder();
 
-            var nx = 1920;
-            var ny = 1080;
+            var nx = 192;
+            var ny = 108;
             var ns = 100;
 
             builder.AppendFormat($"P3\n");
@@ -33,12 +33,12 @@ namespace RayTracing
             var hitables = GetRandomScene();
             var world = new HitableList(hitables);
 
-            var lookFrom = new Vector3(12.0f, 2.0f, 2.5f);
+            var lookFrom = new Vector3(13.0f, 2.0f, 3.0f);
             var lookAt = new Vector3(0.0f, 0.0f, 0.0f);
-            var focusDistance = (lookFrom - lookAt).Length();
-            var aperture = 0.1f;
+            var focusDistance = 10.0f;
+            var aperture = 0.0f;
             var up = new Vector3(0.0f, 1.0f, 0.0f);
-            var camera = new Camera(lookFrom, lookAt, up, 20.0f, 1.0f * nx / ny, aperture, focusDistance);
+            var camera = new Camera(lookFrom, lookAt, up, 20.0f, 1.0f * nx / ny, aperture, focusDistance, 0.0f, 1.0f);
 
             for (var j = ny - 1; j >= 0; j--)
             {
@@ -104,9 +104,9 @@ namespace RayTracing
                 new Sphere(new Vector3(0.0f, -1000.0f, 0.0f), 1000.0f, new Lambertian(new Vector3(0.5f, 0.5f, 0.5f)))
             };
 
-            for (var a = -11; a < 11; a++)
+            for (var a = -10; a < 10; a++)
             {
-                for (int b = -11; b < 11; b++)
+                for (int b = -10; b < 10; b++)
                 {
                     var chooseMat = Base.Random.NextFloat(0.0f, 1.0f);
                     var center = new Vector3(
@@ -119,8 +119,11 @@ namespace RayTracing
                     {
                         if (chooseMat < 0.8f)
                         {
-                            var obj = new Sphere(
+                            var obj = new MovingSphere(
                                 center,
+                                center + new Vector3(0.0f, 0.5f * Base.Random.NextInUnitFloat(), 0.0f),
+                                0.0f,
+                                1.0f,
                                 0.2f,
                                 new Lambertian(
                                     new Vector3(

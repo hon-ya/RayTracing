@@ -15,7 +15,7 @@ namespace RayTracing
         public ScatterRecord? Scatter(Ray rayIn, HitRecord hitRecord)
         {
             var target = hitRecord.Position + hitRecord.Normal + Base.Random.NextInUnitSphere();
-            var scattered = new Ray(hitRecord.Position, target - hitRecord.Position);
+            var scattered = new Ray(hitRecord.Position, target - hitRecord.Position, rayIn.Time);
             var attenuation = Albedo;
 
             return new ScatterRecord {Scattered = scattered, Attenuation = attenuation};
