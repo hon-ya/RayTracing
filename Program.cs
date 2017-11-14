@@ -20,18 +20,10 @@ namespace RayTracing
             builder.AppendFormat($"{nx} {ny}\n");
             builder.AppendFormat($"255\n");
 
-#if false
-            var hitables = new IHitable[]
-            {
-                new Sphere(new Vector3(0.0f, 0.0f, -1.0f), 0.5f, new Lambertian(new Vector3(0.1f, 0.2f, 0.5f))),
-                new Sphere(new Vector3(0.0f, -100.5f, -1.0f), 100.0f, new Lambertian(new Vector3(0.8f, 0.8f, 0.0f))),
-                new Sphere(new Vector3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(new Vector3(0.8f, 0.6f, 0.2f), 0.0f)),
-                new Sphere(new Vector3(-1.0f, 0.0f, -1.0f), 0.5f, new Dielectric(1.5f)),
-                new Sphere(new Vector3(-1.0f, 0.0f, -1.0f), -0.45f, new Dielectric(1.5f)),
-            };
-#endif
+            //var hitables = GetSimpleScene();
             var hitables = GetRandomScene();
-            var world = new HitableList(hitables);
+            //var world = new HitableList(hitables);
+            var world = new BvhNode(hitables, 0.0f, 1.0f);
 
             var lookFrom = new Vector3(13.0f, 2.0f, 3.0f);
             var lookAt = new Vector3(0.0f, 0.0f, 0.0f);
@@ -70,7 +62,7 @@ namespace RayTracing
             File.WriteAllText("output.ppm", builder.ToString());
         }
 
-        private static Color3 GetColor(Ray ray, HitableList world, int depth)
+        private static Color3 GetColor(Ray ray, IHitable world, int depth)
         {
             var result = world.Hit(ray, 0.001f, float.MaxValue);
             if (result.HasValue)
@@ -95,6 +87,18 @@ namespace RayTracing
                 var t = 0.5f * (directionUnit.Y + 1.0f);
                 return (1.0f - t) * Color3.White + t * new Color3(0.5f, 0.7f, 1.0f);
             }
+        }
+
+        static private List<IHitable> GetSimpleScene()
+        {
+            return new List<IHitable>()
+            {
+                new Sphere(new Vector3(0.0f, 0.0f, -1.0f), 0.5f, new Lambertian(new Vector3(0.1f, 0.2f, 0.5f))),
+                new Sphere(new Vector3(0.0f, -100.5f, -1.0f), 100.0f, new Lambertian(new Vector3(0.8f, 0.8f, 0.0f))),
+                new Sphere(new Vector3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(new Vector3(0.8f, 0.6f, 0.2f), 0.0f)),
+                new Sphere(new Vector3(-1.0f, 0.0f, -1.0f), 0.5f, new Dielectric(1.5f)),
+                new Sphere(new Vector3(-1.0f, 0.0f, -1.0f), -0.45f, new Dielectric(1.5f)),
+            };
         }
 
         static private List<IHitable> GetRandomScene()

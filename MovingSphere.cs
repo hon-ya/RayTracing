@@ -61,5 +61,16 @@ namespace RayTracing
 
             return null;
         }
+
+        public AABB BoundingBox(float time0, float time1)
+        {
+            var center0 = GetCenter(time0);
+            var center1 = GetCenter(time1);
+
+            var box0 = new AABB(center0 - Radius, center0 + Radius);
+            var box1 = new AABB(center1 - Radius, center1 + Radius);
+
+            return AABB.CalculateSurroundingBox(box0, box1);
+        }
     }
 }

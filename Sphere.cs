@@ -49,5 +49,10 @@ namespace RayTracing
 
             return null;
         }
+
+        public AABB BoundingBox(float time0, float time1)
+        {
+            return new AABB(Center - Radius, Center + Radius);
+        }
     }
 }
