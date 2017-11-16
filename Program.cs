@@ -21,7 +21,8 @@ namespace RayTracing
             builder.AppendFormat($"255\n");
 
             //var hitables = GetSimpleScene();
-            var hitables = GetRandomScene();
+            var hitables = GetTwoSphereScene();
+            //var hitables = GetRandomScene();
             //var world = new HitableList(hitables);
             var world = new BvhNode(hitables, 0.0f, 1.0f);
 
@@ -93,24 +94,45 @@ namespace RayTracing
         {
             return new List<IHitable>()
             {
-                new Sphere(new Vector3(0.0f, 0.0f, -1.0f), 0.5f, new Lambertian(new Vector3(0.1f, 0.2f, 0.5f))),
-                new Sphere(new Vector3(0.0f, -100.5f, -1.0f), 100.0f, new Lambertian(new Vector3(0.8f, 0.8f, 0.0f))),
+                new Sphere(new Vector3(0.0f, 0.0f, -1.0f), 0.5f, new Lambertian(new ConstantTexture(new Vector3(0.1f, 0.2f, 0.5f)))),
+                new Sphere(new Vector3(0.0f, -100.5f, -1.0f), 100.0f, new Lambertian(new ConstantTexture(new Vector3(0.8f, 0.8f, 0.0f)))),
                 new Sphere(new Vector3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(new Vector3(0.8f, 0.6f, 0.2f), 0.0f)),
                 new Sphere(new Vector3(-1.0f, 0.0f, -1.0f), 0.5f, new Dielectric(1.5f)),
                 new Sphere(new Vector3(-1.0f, 0.0f, -1.0f), -0.45f, new Dielectric(1.5f)),
             };
         }
 
+        static private List<IHitable> GetTwoSphereScene()
+        {
+            var checkerTexture = new CheckerTexture(
+                new ConstantTexture(new Color3(0.2f, 0.3f, 0.1f)),
+                new ConstantTexture(new Color3(0.9f, 0.9f, 0.9f))
+            );
+
+            return new List<IHitable>
+            {
+                new Sphere(new Vector3(0.0f, -10.0f, 0.0f), 10.0f, new Lambertian(checkerTexture)),
+                new Sphere(new Vector3(0.0f,  10.0f, 0.0f), 10.0f, new Lambertian(checkerTexture))
+            };
+        }
+
         static private List<IHitable> GetRandomScene()
         {
+            var checkerTexture = new CheckerTexture(
+                new ConstantTexture(new Color3(0.2f, 0.3f, 0.1f)), 
+                new ConstantTexture(new Color3(0.9f, 0.9f, 0.9f))
+                );
+
             var hitables = new List<IHitable>()
             {
-                new Sphere(new Vector3(0.0f, -1000.0f, 0.0f), 1000.0f, new Lambertian(new Vector3(0.5f, 0.5f, 0.5f)))
+                new Sphere(new Vector3(0.0f, -1000.0f, 0.0f), 1000.0f, new Lambertian(checkerTexture))
             };
 
-            for (var a = -10; a < 10; a++)
+            var range = 1;
+
+            for (var a = -range; a < range; a++)
             {
-                for (int b = -10; b < 10; b++)
+                for (int b = -range; b < range; b++)
                 {
                     var chooseMat = Base.Random.NextFloat(0.0f, 1.0f);
                     var center = new Vector3(
@@ -130,11 +152,11 @@ namespace RayTracing
                                 1.0f,
                                 0.2f,
                                 new Lambertian(
-                                    new Vector3(
+                                    new ConstantTexture(new Vector3(
                                         Base.Random.NextInUnitFloat() * Base.Random.NextInUnitFloat(),
                                         Base.Random.NextInUnitFloat() * Base.Random.NextInUnitFloat(),
                                         Base.Random.NextInUnitFloat() * Base.Random.NextInUnitFloat()
-                                    )));
+                                    ))));
                             hitables.Add(obj);
                         }
                         else if (chooseMat < 0.95f)
@@ -168,7 +190,7 @@ namespace RayTracing
             hitables.AddRange(new Sphere[]
             {
                 new Sphere(new Vector3(0.0f, 1.0f, 0.0f), 1.0f, new Dielectric(1.5f)),
-                new Sphere(new Vector3(-4.0f, 1.0f, 0.0f), 1.0f, new Lambertian(new Vector3(0.4f, 0.2f, 0.1f))),
+                new Sphere(new Vector3(-4.0f, 1.0f, 0.0f), 1.0f, new Lambertian(new ConstantTexture(new Vector3(0.4f, 0.2f, 0.1f)))),
                 new Sphere(new Vector3(4.0f, 1.0f, 0.0f), 1.0f, new Metal(new Vector3(0.7f, 0.6f, 0.5f), 0.0f)),
             });
             return hitables;

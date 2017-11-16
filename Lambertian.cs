@@ -5,9 +5,9 @@ namespace RayTracing
 {
     public class Lambertian : IMaterial
     {
-        public Vector3 Albedo { get; set; }
+        public ITexture Albedo { get; set; }
 
-        public Lambertian(Vector3 albedo)
+        public Lambertian(ITexture albedo)
         {
             Albedo = albedo;
         }
@@ -16,7 +16,7 @@ namespace RayTracing
         {
             var target = hitRecord.Position + hitRecord.Normal + Base.Random.NextInUnitSphere();
             var scattered = new Ray(hitRecord.Position, target - hitRecord.Position, rayIn.Time);
-            var attenuation = Albedo;
+            var attenuation = Albedo.Value(0, 0, hitRecord.Position);
 
             return new ScatterRecord {Scattered = scattered, Attenuation = attenuation};
         }
