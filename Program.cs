@@ -21,7 +21,8 @@ namespace RayTracing
             builder.AppendFormat($"255\n");
 
             //var hitables = GetSimpleScene();
-            var hitables = GetTwoSphereScene();
+            //var hitables = GetTwoSphereScene();
+            var hitables = GetTwoPerlinSphereScene();
             //var hitables = GetRandomScene();
             //var world = new HitableList(hitables);
             var world = new BvhNode(hitables, 0.0f, 1.0f);
@@ -116,10 +117,21 @@ namespace RayTracing
             };
         }
 
+        static private List<IHitable> GetTwoPerlinSphereScene()
+        {
+            var perlinTexture = new NoiseTexture(5.0f);
+
+            return new List<IHitable>
+            {
+                new Sphere(new Vector3(0.0f, -1000.0f, 0.0f), 1000.0f, new Lambertian(perlinTexture)),
+                new Sphere(new Vector3(0.0f,  2.0f, 0.0f), 2.0f, new Lambertian(perlinTexture))
+            };
+        }
+
         static private List<IHitable> GetRandomScene()
         {
             var checkerTexture = new CheckerTexture(
-                new ConstantTexture(new Color3(0.2f, 0.3f, 0.1f)), 
+                new ConstantTexture(new Color3(0.2f, 0.3f, 0.1f)),
                 new ConstantTexture(new Color3(0.9f, 0.9f, 0.9f))
                 );
 
