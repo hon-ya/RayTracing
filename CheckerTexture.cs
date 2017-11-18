@@ -14,16 +14,16 @@ namespace RayTracing
             Even = even;
         }
 
-        public Color3 Value(float u, float v, Vector3 position)
+        public Color3 Value(TexCoord texCoord, Vector3 position)
         {
             var sines = Math.Sin(10.0 * position.X) * Math.Sin(10.0 * position.Y) * Math.Sin(10.0 * position.Z);
             if (sines < 0)
             {
-                return Odd.Value(u, v, position);
+                return Odd.Value(texCoord, position);
             }
             else
             {
-                return Even.Value(u, v, position);
+                return Even.Value(texCoord, position);
             }
         }
     }

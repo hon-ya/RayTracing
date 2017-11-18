@@ -11,7 +11,7 @@ namespace RayTracing
             Color = color;
         }
 
-        public Color3 Value(float u, float v, Vector3 position)
+        public Color3 Value(TexCoord texCoord, Vector3 position)
         {
             return Color;
         }

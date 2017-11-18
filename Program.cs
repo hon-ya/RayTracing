@@ -22,7 +22,8 @@ namespace RayTracing
 
             //var hitables = GetSimpleScene();
             //var hitables = GetTwoSphereScene();
-            var hitables = GetTwoPerlinSphereScene();
+            //var hitables = GetTwoPerlinSphereScene();
+            var hitables = GetTwoImageSphereScene();
             //var hitables = GetRandomScene();
             //var world = new HitableList(hitables);
             var world = new BvhNode(hitables, 0.0f, 1.0f);
@@ -125,6 +126,19 @@ namespace RayTracing
             {
                 new Sphere(new Vector3(0.0f, -1000.0f, 0.0f), 1000.0f, new Lambertian(perlinTexture)),
                 new Sphere(new Vector3(0.0f,  2.0f, 0.0f), 2.0f, new Lambertian(perlinTexture))
+            };
+        }
+
+        static private List<IHitable> GetTwoImageSphereScene()
+        {
+            var filepath = @"earthmap.tif";
+            var image = Util.LoadImage(filepath);
+            var texture = new ImageTexture(image.pixels, image.width, image.height);
+
+            return new List<IHitable>
+            {
+                new Sphere(new Vector3(0.0f, -1000.0f, 0.0f), 1000.0f, new Lambertian(texture)),
+                new Sphere(new Vector3(0.0f,  2.0f, 0.0f), 2.0f, new Lambertian(texture))
             };
         }
 

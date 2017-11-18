@@ -12,7 +12,7 @@ namespace RayTracing
             Scale = scale;
         }
 
-        public Color3 Value(float u, float v, Vector3 position)
+        public Color3 Value(TexCoord texCoord, Vector3 position)
         {
             //return Color3.White * Perlin.Noise(Scale * position);
             //return Color3.White * 0.5f * (1.0f + Perlin.Noise(Scale * position));
