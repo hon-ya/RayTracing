@@ -3,7 +3,7 @@ using SharpDX;
 
 namespace RayTracing
 {
-    public class Dielectric : IMaterial
+    public class Dielectric : MaterialBase
     {
         public float RefractiveIndex { get; set; }
 
@@ -12,7 +12,7 @@ namespace RayTracing
             RefractiveIndex = refractiveIndex;
         }
 
-        public ScatterRecord? Scatter(Ray rayIn, HitRecord hitRecord)
+        public override ScatterRecord? Scatter(Ray rayIn, HitRecord hitRecord)
         {
             const float airRefractiveIndex = 1.0f;
 

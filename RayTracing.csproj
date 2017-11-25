@@ -57,10 +57,13 @@
     <Compile Include="CheckerTexture.cs" />
     <Compile Include="ConstantTexture.cs" />
     <Compile Include="Dielectric.cs" />
+    <Compile Include="DiffuseLight.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="FlipNormals.cs" />
     <Compile Include="HitableList.cs" />
     <Compile Include="IHitable.cs" />
     <Compile Include="ImageTexture.cs" />
+    <Compile Include="MaterialBase.cs" />
     <Compile Include="IMaterial.cs" />
     <Compile Include="Lambertian.cs" />
     <Compile Include="Metal.cs" />
@@ -74,6 +77,9 @@
     <Compile Include="ITexture.cs" />
     <Compile Include="TexCoord.cs" />
     <Compile Include="Util.cs" />
+    <Compile Include="YzRectangle.cs" />
+    <Compile Include="XzRectangle.cs" />
+    <Compile Include="XyRectangle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -2,7 +2,7 @@
 
 namespace RayTracing
 {
-    public class Metal : IMaterial
+    public class Metal : MaterialBase
     {
         public Vector3 Albedo { get; set; }
         public float Fuzz { get; set; }
@@ -13,7 +13,7 @@ namespace RayTracing
             Fuzz = MathUtil.Clamp(fuzz, 0.0f, 1.0f);
         }
 
-        public ScatterRecord? Scatter(Ray rayIn, HitRecord hitRecord)
+        public override ScatterRecord? Scatter(Ray rayIn, HitRecord hitRecord)
         {
             var reflected = Vector3.Reflect(rayIn.Direction, hitRecord.Normal);
             var scattered = new Ray(hitRecord.Position, reflected + Fuzz * Base.Random.NextInUnitSphere());

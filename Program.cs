@@ -12,8 +12,8 @@ namespace RayTracing
         {
             var builder = new StringBuilder();
 
-            var nx = 192;
-            var ny = 108;
+            var nx = 192 * 2;
+            var ny = 108 * 2;
             var ns = 100;
 
             builder.AppendFormat($"P3\n");
@@ -23,17 +23,20 @@ namespace RayTracing
             //var hitables = GetSimpleScene();
             //var hitables = GetTwoSphereScene();
             //var hitables = GetTwoPerlinSphereScene();
-            var hitables = GetTwoImageSphereScene();
+            //var hitables = GetTwoImageSphereScene();
+            //var hitables = GetSimpleLightScene();
+            var hitables = GetCornellBoxScene();
             //var hitables = GetRandomScene();
             //var world = new HitableList(hitables);
             var world = new BvhNode(hitables, 0.0f, 1.0f);
 
-            var lookFrom = new Vector3(13.0f, 2.0f, 3.0f);
-            var lookAt = new Vector3(0.0f, 0.0f, 0.0f);
+            var lookFrom = new Vector3(278.0f, 278.0f, -800.0f);
+            var lookAt = new Vector3(278.0f, 278.0f, 0.0f);
             var focusDistance = 10.0f;
             var aperture = 0.0f;
+            float vfov = 40.0f;
             var up = new Vector3(0.0f, 1.0f, 0.0f);
-            var camera = new Camera(lookFrom, lookAt, up, 20.0f, 1.0f * nx / ny, aperture, focusDistance, 0.0f, 1.0f);
+            var camera = new Camera(lookFrom, lookAt, up, vfov, 1.0f * nx / ny, aperture, focusDistance, 0.0f, 1.0f);
 
             for (var j = ny - 1; j >= 0; j--)
             {
@@ -71,28 +74,26 @@ namespace RayTracing
             if (result.HasValue)
             {
                 var hitRecord = result.Value;
-                if (depth < 50)
+                var scatterRecordResult = hitRecord.Material.Scatter(ray, hitRecord);
+                var emitted = hitRecord.Material.Emitted(hitRecord.TexCoord, hitRecord.Position);
+
+                if (depth < 50 && scatterRecordResult.HasValue)
                 {
-                    var scatterRecordResult = hitRecord.Material.Scatter(ray, hitRecord);
-                    if (scatterRecordResult.HasValue)
-                    {
-                        var scatterRecord = scatterRecordResult.Value;
-
-                        return Vector3.Multiply(scatterRecord.Attenuation, GetColor(scatterRecord.Scattered, world, depth + 1));
-                    }
+                    var scatterRecord = scatterRecordResult.Value;
+                    return Color3.Add(emitted,
+                        Vector3.Multiply(scatterRecord.Attenuation,
+                            GetColor(scatterRecord.Scattered, world, depth + 1)));
                 }
+                else
+                {
+                    return emitted;
+                }
+            }
 
-                return Color3.Black;
-            }
-            else
-            {
-                var directionUnit = Vector3.Normalize(ray.Direction);
-                var t = 0.5f * (directionUnit.Y + 1.0f);
-                return (1.0f - t) * Color3.White + t * new Color3(0.5f, 0.7f, 1.0f);
-            }
+            return Color3.Black;
         }
 
-        static private List<IHitable> GetSimpleScene()
+        private static List<IHitable> GetSimpleScene()
         {
             return new List<IHitable>()
             {
@@ -104,7 +105,7 @@ namespace RayTracing
             };
         }
 
-        static private List<IHitable> GetTwoSphereScene()
+        private static List<IHitable> GetTwoSphereScene()
         {
             var checkerTexture = new CheckerTexture(
                 new ConstantTexture(new Color3(0.2f, 0.3f, 0.1f)),
@@ -118,7 +119,7 @@ namespace RayTracing
             };
         }
 
-        static private List<IHitable> GetTwoPerlinSphereScene()
+        private static List<IHitable> GetTwoPerlinSphereScene()
         {
             var perlinTexture = new NoiseTexture(5.0f);
 
@@ -129,7 +130,7 @@ namespace RayTracing
             };
         }
 
-        static private List<IHitable> GetTwoImageSphereScene()
+        private static List<IHitable> GetTwoImageSphereScene()
         {
             var filepath = @"earthmap.tif";
             var image = Util.LoadImage(filepath);
@@ -142,7 +143,32 @@ namespace RayTracing
             };
         }
 
-        static private List<IHitable> GetRandomScene()
+        private static List<IHitable> GetSimpleLightScene()
+        {
+            var perlinTexture = new NoiseTexture(4.0f);
+
+            return new List<IHitable>
+            {
+                new Sphere(new Vector3(0.0f, -1000.0f, 0.0f), 1000.0f, new Lambertian(perlinTexture)),
+                new Sphere(new Vector3(0.0f,  2.0f, 0.0f), 2.0f, new Lambertian(perlinTexture)),
+                new Sphere(new Vector3(0.0f,  7.0f, 0.0f), 2.0f, new DiffuseLight(new ConstantTexture(new Color3(4.0f, 4.0f, 4.0f)))),
+                new XyRectangle(3.0f, 5.0f, 1.0f, 3.0f, -2.0f, new DiffuseLight(new ConstantTexture(new Color3(4.0f, 4.0f, 4.0f)))),
+            };
+        }
+
+        private static List<IHitable> GetCornellBoxScene()
+        {
+            return new List<IHitable>
+            {
+                new FlipNormals(new YzRectangle(0, 555, 0, 555, 555, new Lambertian(new ConstantTexture(Color.Green.ToColor3())))),
+                new YzRectangle(0, 555, 0, 555, 0, new Lambertian(new ConstantTexture(Color.Red.ToColor3()))),
+                new XzRectangle(213, 343, 227, 332, 554, new DiffuseLight(new ConstantTexture(new Vector3(15.0f, 15.0f, 15.0f)))),
+                new XzRectangle(0, 555, 0, 555, 0, new Lambertian(new ConstantTexture(Color.White.ToColor3()))),
+                new FlipNormals(new XyRectangle(0, 555, 0, 555, 555, new Lambertian(new ConstantTexture(Color.White.ToColor3())))),
+            };
+        }
+
+        private static List<IHitable> GetRandomScene()
         {
             var checkerTexture = new CheckerTexture(
                 new ConstantTexture(new Color3(0.2f, 0.3f, 0.1f)),
