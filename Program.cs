@@ -165,6 +165,8 @@ namespace RayTracing
                 new XzRectangle(213, 343, 227, 332, 554, new DiffuseLight(new ConstantTexture(new Vector3(15.0f, 15.0f, 15.0f)))),
                 new XzRectangle(0, 555, 0, 555, 0, new Lambertian(new ConstantTexture(Color.White.ToColor3()))),
                 new FlipNormals(new XyRectangle(0, 555, 0, 555, 555, new Lambertian(new ConstantTexture(Color.White.ToColor3())))),
+                new Translate(new RotateY(new Box(Vector3.Zero, new Vector3(165, 165, 165), new Lambertian(new ConstantTexture(Color.White.ToColor3()))), MathUtil.DegreesToRadians(-18.0f)), new Vector3(130.0f, 0.0f, 65.0f)),
+                new Translate(new RotateY(new Box(Vector3.Zero, new Vector3(165, 330, 165), new Lambertian(new ConstantTexture(Color.White.ToColor3()))), MathUtil.DegreesToRadians(15.0f)), new Vector3(265.0f, 0.0f, 295.0f)),
             };
         }
 

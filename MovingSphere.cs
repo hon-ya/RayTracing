@@ -62,7 +62,7 @@ namespace RayTracing
             return null;
         }
 
-        public AABB BoundingBox(float time0, float time1)
+        public AABB GetBoundingBox(float time0, float time1)
         {
             var center0 = GetCenter(time0);
             var center1 = GetCenter(time1);

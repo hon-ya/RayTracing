@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net.Mime;
+using System.Security.Cryptography;
 using SharpDX;
 
 namespace RayTracing
@@ -38,6 +40,16 @@ namespace RayTracing
                     }
                 default:
                     throw new NotSupportedException();
+            }
+        }
+
+        public static IEnumerable<Tuple<int, int, int>> GenerateIndex(int iEnd, int jEnd, int kEnd)
+        {
+            for (var i = 0; i < iEnd; i++)
+            for (var j = 0; j < jEnd; j++)
+            for (var k = 0; k < kEnd; k++)
+            {
+                yield return new Tuple<int, int, int>(i, j, k);
             }
         }
     }

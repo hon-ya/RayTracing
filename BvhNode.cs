@@ -38,8 +38,8 @@ namespace RayTracing
                     break;
             }
 
-            var boxLeft = Left.BoundingBox(time0, time1);
-            var boxRight = Right.BoundingBox(time0, time1);
+            var boxLeft = Left.GetBoundingBox(time0, time1);
+            var boxRight = Right.GetBoundingBox(time0, time1);
 
             if (boxLeft == null || boxRight == null)
             {
@@ -79,15 +79,15 @@ namespace RayTracing
             }
         }
 
-        public AABB BoundingBox(float time0, float time1)
+        public AABB GetBoundingBox(float time0, float time1)
         {
             return Box;
         }
 
         private static int BoxComparison(IHitable left, IHitable right, int axis)
         {
-            var boxLeft = left.BoundingBox(0, 0);
-            var boxRight = right.BoundingBox(0, 0);
+            var boxLeft = left.GetBoundingBox(0, 0);
+            var boxRight = right.GetBoundingBox(0, 0);
 
             if (boxLeft == null || boxRight == null)
             {

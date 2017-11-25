@@ -14,6 +14,6 @@ namespace RayTracing
     public interface IHitable
     {
         HitRecord? Hit(Ray ray, float tMin, float tMax);
-        AABB BoundingBox(float time0, float time1);
+        AABB GetBoundingBox(float time0, float time1);
     }
 }

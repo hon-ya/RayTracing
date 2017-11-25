@@ -27,9 +27,9 @@ namespace RayTracing
             }
         }
 
-        public AABB BoundingBox(float time0, float time1)
+        public AABB GetBoundingBox(float time0, float time1)
         {
-            return Hitable.BoundingBox(time0, time1);
+            return Hitable.GetBoundingBox(time0, time1);
         }
     }
 }

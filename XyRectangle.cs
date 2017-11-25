@@ -52,7 +52,7 @@ namespace RayTracing
             };
         }
 
-        public AABB BoundingBox(float time0, float time1)
+        public AABB GetBoundingBox(float time0, float time1)
         {
             return new AABB(new Vector3(X0, Y0, K - 0.0001f), new Vector3(X1, Y1, K + 0.0001f));
         }
