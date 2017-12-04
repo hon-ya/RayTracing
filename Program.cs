@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RayTracing
 {
@@ -12,8 +14,8 @@ namespace RayTracing
         {
             var builder = new StringBuilder();
 
-            var nx = 192 * 2;
-            var ny = 108 * 2;
+            var nx = 192;
+            var ny = 108;
             var ns = 100;
 
             builder.AppendFormat($"P3\n");
@@ -25,7 +27,8 @@ namespace RayTracing
             //var hitables = GetTwoPerlinSphereScene();
             //var hitables = GetTwoImageSphereScene();
             //var hitables = GetSimpleLightScene();
-            var hitables = GetCornellBoxScene();
+            //var hitables = GetCornellBoxScene();
+            var hitables = GetCornellSmokeScene();
             //var hitables = GetRandomScene();
             //var world = new HitableList(hitables);
             var world = new BvhNode(hitables, 0.0f, 1.0f);
@@ -46,8 +49,8 @@ namespace RayTracing
 
                     for (var s = 0; s < ns; s++)
                     {
-                        var u = (1.0f * i + Base.Random.NextFloat(0.0f, 1.0f)) / nx;
-                        var v = (1.0f * j + Base.Random.NextFloat(0.0f, 1.0f)) / ny;
+                        var u = (1.0f * i + Base.Random.NextInUnitFloat()) / nx;
+                        var v = (1.0f * j + Base.Random.NextInUnitFloat()) / ny;
 
                         var ray = camera.GetRay(u, v);
                         color += GetColor(ray, world, 0);
@@ -158,15 +161,49 @@ namespace RayTracing
 
         private static List<IHitable> GetCornellBoxScene()
         {
+            var red = new Lambertian(new ConstantTexture(new Vector3(0.65f, 0.05f, 0.05f)));
+            var white = new Lambertian(new ConstantTexture(new Vector3(0.73f, 0.73f, 0.73f)));
+            var green = new Lambertian(new ConstantTexture(new Vector3(0.12f, 0.45f, 0.15f)));
+            var light = new DiffuseLight(new ConstantTexture(new Vector3(15.0f, 15.0f, 15.0f)));
+
             return new List<IHitable>
             {
-                new FlipNormals(new YzRectangle(0, 555, 0, 555, 555, new Lambertian(new ConstantTexture(Color.Green.ToColor3())))),
-                new YzRectangle(0, 555, 0, 555, 0, new Lambertian(new ConstantTexture(Color.Red.ToColor3()))),
-                new XzRectangle(213, 343, 227, 332, 554, new DiffuseLight(new ConstantTexture(new Vector3(15.0f, 15.0f, 15.0f)))),
-                new XzRectangle(0, 555, 0, 555, 0, new Lambertian(new ConstantTexture(Color.White.ToColor3()))),
-                new FlipNormals(new XyRectangle(0, 555, 0, 555, 555, new Lambertian(new ConstantTexture(Color.White.ToColor3())))),
+                new FlipNormals(new YzRectangle(0, 555, 0, 555, 555, green)),
+                new YzRectangle(0, 555, 0, 555, 0, red),
+                new XzRectangle(213, 343, 227, 332, 554, light),
+                new FlipNormals(new XzRectangle(0, 555, 0, 555, 555, white)),
+                new XzRectangle(0, 555, 0, 555, 0, white),
+                new FlipNormals(new XyRectangle(0, 555, 0, 555, 555, white)),
                 new Translate(new RotateY(new Box(Vector3.Zero, new Vector3(165, 165, 165), new Lambertian(new ConstantTexture(Color.White.ToColor3()))), MathUtil.DegreesToRadians(-18.0f)), new Vector3(130.0f, 0.0f, 65.0f)),
                 new Translate(new RotateY(new Box(Vector3.Zero, new Vector3(165, 330, 165), new Lambertian(new ConstantTexture(Color.White.ToColor3()))), MathUtil.DegreesToRadians(15.0f)), new Vector3(265.0f, 0.0f, 295.0f)),
+            };
+        }
+
+        private static List<IHitable> GetCornellSmokeScene()
+        {
+            var red = new Lambertian(new ConstantTexture(new Vector3(0.65f, 0.05f, 0.05f)));
+            var white = new Lambertian(new ConstantTexture(new Vector3(0.73f, 0.73f, 0.73f)));
+            var green = new Lambertian(new ConstantTexture(new Vector3(0.12f, 0.45f, 0.15f)));
+            var light = new DiffuseLight(new ConstantTexture(new Vector3(1.0f, 1.0f, 1.0f)));
+
+            return new List<IHitable>
+            {
+                new FlipNormals(new YzRectangle(0, 555, 0, 555, 555, green)),
+                new YzRectangle(0, 555, 0, 555, 0, red),
+                new XzRectangle(113, 443, 127, 432, 554, light),
+                new FlipNormals(new XzRectangle(0, 555, 0, 555, 555, white)),
+                new XzRectangle(0, 555, 0, 555, 0, white),
+                new FlipNormals(new XyRectangle(0, 555, 0, 555, 555, white)),
+                new ConstantMedium(
+                    new Translate(new RotateY(new Box(Vector3.Zero, new Vector3(165, 165, 165), white), MathUtil.DegreesToRadians(-18.0f)), new Vector3(130.0f, 0.0f, 65.0f)),
+                    0.01f,
+                    new ConstantTexture(Color3.White)
+                ),
+                new ConstantMedium(
+                    new Translate(new RotateY(new Box(Vector3.Zero, new Vector3(165, 330, 165), white), MathUtil.DegreesToRadians(15.0f)), new Vector3(265.0f, 0.0f, 295.0f)),
+                    0.01f,
+                    new ConstantTexture(Color3.Black)
+                ),
             };
         }
 
@@ -188,7 +225,7 @@ namespace RayTracing
             {
                 for (int b = -range; b < range; b++)
                 {
-                    var chooseMat = Base.Random.NextFloat(0.0f, 1.0f);
+                    var chooseMat = Base.Random.NextInUnitFloat();
                     var center = new Vector3(
                         a + 0.9f * Base.Random.NextInUnitFloat(),
                         0.2f,

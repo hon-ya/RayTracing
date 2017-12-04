@@ -4,6 +4,6 @@ namespace RayTracing
 {
     public interface ITexture
     {
-        Color3 Value(TexCoord texCoord, Vector3 position);
+        Color3 GetValue(TexCoord texCoord, Vector3 position);
     }
 }

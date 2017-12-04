@@ -18,7 +18,7 @@ namespace RayTracing
 
         public override Color3 Emitted(TexCoord texCoord, Vector3 position)
         {
-            return Emit.Value(texCoord, position);
+            return Emit.GetValue(texCoord, position);
         }
     }
 }

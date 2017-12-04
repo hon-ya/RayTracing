@@ -56,6 +56,7 @@
     <Compile Include="BvhNode.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="CheckerTexture.cs" />
+    <Compile Include="ConstantMedium.cs" />
     <Compile Include="ConstantTexture.cs" />
     <Compile Include="Dielectric.cs" />
     <Compile Include="DiffuseLight.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="HitableList.cs" />
     <Compile Include="IHitable.cs" />
     <Compile Include="ImageTexture.cs" />
+    <Compile Include="Isotropic.cs" />
     <Compile Include="MaterialBase.cs" />
     <Compile Include="IMaterial.cs" />
     <Compile Include="Lambertian.cs" />

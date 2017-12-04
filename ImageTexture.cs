@@ -16,7 +16,7 @@ namespace RayTracing
             Height = height;
         }
 
-        public Color3 Value(TexCoord texCoord, Vector3 position)
+        public Color3 GetValue(TexCoord texCoord, Vector3 position)
         {
             var i = (int) (texCoord.U * Width);
             var j = (int) ((1 - texCoord.V) * Height - 0.001);

@@ -43,6 +43,15 @@ namespace RayTracing
             }
         }
 
+        public static IEnumerable<Tuple<int, int>> GenerateIndex(int iEnd, int jEnd)
+        {
+            for (var i = 0; i < iEnd; i++)
+            for (var j = 0; j < jEnd; j++)
+            {
+                yield return new Tuple<int, int>(i, j);
+            }
+        }
+
         public static IEnumerable<Tuple<int, int, int>> GenerateIndex(int iEnd, int jEnd, int kEnd)
         {
             for (var i = 0; i < iEnd; i++)
