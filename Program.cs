@@ -28,7 +28,8 @@ namespace RayTracing
             //var hitables = GetTwoImageSphereScene();
             //var hitables = GetSimpleLightScene();
             //var hitables = GetCornellBoxScene();
-            var hitables = GetCornellSmokeScene();
+            //var hitables = GetCornellSmokeScene();
+            var hitables = GetFinalScene();
             //var hitables = GetRandomScene();
             //var world = new HitableList(hitables);
             var world = new BvhNode(hitables, 0.0f, 1.0f);
@@ -204,6 +205,62 @@ namespace RayTracing
                     0.01f,
                     new ConstantTexture(Color3.Black)
                 ),
+            };
+        }
+
+        private static List<IHitable> GetFinalScene()
+        {
+            var white = new Lambertian(new ConstantTexture(new Vector3(0.73f, 0.73f, 0.73f)));
+            var ground = new Lambertian(new ConstantTexture(new Vector3(0.48f, 0.83f, 0.53f)));
+            var orange = new Lambertian(new ConstantTexture(new Vector3(0.7f, 0.3f, 0.1f)));
+            var light = new DiffuseLight(new ConstantTexture(new Vector3(7, 7, 7)));
+            var center = new Vector3(400, 400, 200);
+
+            var earthImage = Util.LoadImage(@"earthmap.tif");
+            var earthTexture = new ImageTexture(earthImage.pixels, earthImage.width, earthImage.height);
+            var earth = new Lambertian(earthTexture);
+
+            var perlinTexture = new NoiseTexture(0.1f);
+            var perlin = new Lambertian(perlinTexture);
+
+            var boxlist = new List<IHitable>();
+            foreach(var (i, j) in Util.GenerateIndex(20, 20))
+            {
+                var w = 100.0f;
+                var x0 = -1000.0f + i * w;
+                var z0 = -1000.0f + j * w;
+                var y0 = 0.0f;
+                var x1 = x0 + w;
+                var y1 = 100.0f * (Base.Random.NextInUnitFloat() + 0.01f);
+                var z1 = z0 + w;
+
+                var box = new Box(new Vector3(x0, y0, z0), new Vector3(x1, y1, z1), ground);
+                boxlist.Add(box);
+            };
+
+            var spherelist = new List<IHitable>();
+            for (var i = 0; i < 1000; i++)
+            {
+                var sphere = new Sphere(Base.Random.NextVector3(Vector3.Zero, new Vector3(165)), 10, white);
+                spherelist.Add(sphere);
+            }
+
+            var boundary = new Sphere(new Vector3(360, 150, 145), 70, new Dielectric(1.5f));
+            var boundary2 = new Sphere(Vector3.Zero, 5000, new Dielectric(1.5f));
+
+            return new List<IHitable>
+            {
+                new BvhNode(boxlist, 0, 1),
+                new XzRectangle(123, 423, 147, 412, 554, light),
+                new MovingSphere(center, center + new Vector3(30, 0, 0), 0, 1, 50, orange),
+                new Sphere(new Vector3(260, 150, 45), 50, new Dielectric(1.5f)),
+                new Sphere(new Vector3(0, 150, 145), 50, new Metal(new Vector3(0.8f, 0.8f, 0.9f), 10.0f)),
+                boundary,
+                new ConstantMedium(boundary, 0.2f, new ConstantTexture(new Vector3(0.2f, 0.4f, 0.9f))),
+                new ConstantMedium(boundary2, 0.0001f, new ConstantTexture(Color3.White)),
+                new Sphere(new Vector3(400, 200, 400), 100, earth),
+                new Sphere(new Vector3(220, 280, 300), 80, perlin),
+                new Translate(new RotateY(new BvhNode(spherelist, 0, 1), MathUtil.DegreesToRadians(15)), new Vector3(-100, 270, 395)),
             };
         }
 
