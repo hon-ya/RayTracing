@@ -45,7 +45,7 @@ namespace RayTracing
                     var position = ray.GetPoint(t);
                     var normal = (position - center) / Radius;
 
-                    return new HitRecord { T = t, Position = position, Normal = normal, Material = Material };
+                    return new HitRecord { Hitable = this, T = t, Position = position, Normal = normal, Material = Material };
                 }
 
                 var t2 = (-b + (float)Math.Sqrt(discriminant)) / a;
@@ -55,7 +55,7 @@ namespace RayTracing
                     var position = ray.GetPoint(t);
                     var normal = (position - center) / Radius;
 
-                    return new HitRecord { T = t, Position = position, Normal = normal, Material = Material };
+                    return new HitRecord { Hitable = this, T = t, Position = position, Normal = normal, Material = Material };
                 }
             }
 

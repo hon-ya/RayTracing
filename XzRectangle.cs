@@ -40,6 +40,7 @@ namespace RayTracing
 
             return new HitRecord
             {
+                Hitable = this,
                 T = t,
                 TexCoord =
                 {
@@ -54,7 +55,7 @@ namespace RayTracing
 
         public AABB GetBoundingBox(float time0, float time1)
         {
-            return new AABB(new Vector3(X0, Z0, K - 0.0001f), new Vector3(X1, Z1, K + 0.0001f));
+            return new AABB(new Vector3(X0, K - 0.0001f, Z0), new Vector3(X1, K + 0.0001f, Z1));
         }
     }
 }

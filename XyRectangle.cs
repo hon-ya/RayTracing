@@ -40,6 +40,7 @@ namespace RayTracing
 
             return new HitRecord
             {
+                Hitable = this,
                 T = t,
                 TexCoord =
                 {

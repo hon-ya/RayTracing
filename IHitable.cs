@@ -4,6 +4,7 @@ namespace RayTracing
 {
     public struct HitRecord
     {
+        public IHitable Hitable;
         public float T;
         public TexCoord TexCoord;
         public Vector3 Position;

@@ -34,7 +34,7 @@ namespace RayTracing
                     var normal = (position - Center) / Radius;
                     var texCoord = GetSphereUv((position - Center) / Radius);
 
-                    return new HitRecord { T = t, TexCoord = texCoord, Position = position, Normal = normal, Material = Material };
+                    return new HitRecord { Hitable = this, T = t, TexCoord = texCoord, Position = position, Normal = normal, Material = Material };
                 }
 
                 var t2 = (-b + (float)Math.Sqrt(discriminant)) / a;
@@ -45,7 +45,7 @@ namespace RayTracing
                     var normal = (position - Center) / Radius;
                     var texCoord = GetSphereUv(position);
 
-                    return new HitRecord { T = t, TexCoord = texCoord, Position = position, Normal = normal, Material = Material };
+                    return new HitRecord { Hitable = this, T = t, TexCoord = texCoord, Position = position, Normal = normal, Material = Material };
                 }
             }
 

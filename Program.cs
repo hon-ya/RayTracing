@@ -16,7 +16,7 @@ namespace RayTracing
 
             var nx = 192;
             var ny = 108;
-            var ns = 100;
+            var ns = 200;
 
             builder.AppendFormat($"P3\n");
             builder.AppendFormat($"{nx} {ny}\n");
@@ -60,9 +60,9 @@ namespace RayTracing
                     color = new Vector3((float)Math.Sqrt(color.Red), (float)Math.Sqrt(color.Green),
                         (float)Math.Sqrt(color.Blue));
 
-                    var ir = (int)(255.99f * color.Red);
-                    var ig = (int)(255.99f * color.Green);
-                    var ib = (int)(255.99f * color.Blue);
+                    var ir = (int)MathUtil.Clamp(255.99f * color.Red, 0, 255);
+                    var ig = (int)MathUtil.Clamp(255.99f * color.Green, 0, 255);
+                    var ib = (int)MathUtil.Clamp(255.99f * color.Blue, 0, 255);
 
                     builder.AppendFormat($"{ir} {ig} {ib}\n");
                 }
@@ -184,7 +184,7 @@ namespace RayTracing
             var red = new Lambertian(new ConstantTexture(new Vector3(0.65f, 0.05f, 0.05f)));
             var white = new Lambertian(new ConstantTexture(new Vector3(0.73f, 0.73f, 0.73f)));
             var green = new Lambertian(new ConstantTexture(new Vector3(0.12f, 0.45f, 0.15f)));
-            var light = new DiffuseLight(new ConstantTexture(new Vector3(1.0f, 1.0f, 1.0f)));
+            var light = new DiffuseLight(new ConstantTexture(new Vector3(7.0f, 7.0f, 7.0f)));
 
             return new List<IHitable>
             {

@@ -54,6 +54,7 @@ namespace RayTracing
 
                         return new HitRecord
                         {
+                            Hitable = this,
                             T = t,
                             Position = ray.GetPoint(t),
                             Normal = Vector3.UnitX,
