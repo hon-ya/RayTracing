@@ -32,8 +32,9 @@ namespace RayTracing
                     var t = t1;
                     var position = ray.GetPoint(t);
                     var normal = (position - Center) / Radius;
+                    var texCoord = GetSphereUv((position - Center) / Radius);
 
-                    return new HitRecord { T = t, Position = position, Normal = normal, Material = Material };
+                    return new HitRecord { Hitable = this, T = t, TexCoord = texCoord, Position = position, Normal = normal, Material = Material };
                 }
 
                 var t2 = (-b + (float)Math.Sqrt(discriminant)) / a;
@@ -42,12 +43,30 @@ namespace RayTracing
                     var t = t2;
                     var position = ray.GetPoint(t);
                     var normal = (position - Center) / Radius;
+                    var texCoord = GetSphereUv(position);
 
-                    return new HitRecord { T = t, Position = position, Normal = normal, Material = Material };
+                    return new HitRecord { Hitable = this, T = t, TexCoord = texCoord, Position = position, Normal = normal, Material = Material };
                 }
             }
 
             return null;
+        }
+
+        public AABB GetBoundingBox(float time0, float time1)
+        {
+            return new AABB(Center - Radius, Center + Radius);
+        }
+
+        private TexCoord GetSphereUv(Vector3 position)
+        {
+            var phi = (float)Math.Atan2(position.Z, position.X);
+            var theta = (float)Math.Asin(position.Y);
+
+            return new TexCoord()
+            {
+                U = 1 - (phi + MathUtil.Pi) / (2 * MathUtil.Pi),
+                V = (theta + MathUtil.PiOverTwo) / MathUtil.Pi,
+            };
         }
     }
 }

@@ -13,9 +13,14 @@ namespace RayTracing
         public Vector3 U { get; private set; }
         public Vector3 V { get; private set; }
         public Vector3 W { get; private set; }
+        public float Time0 { get; private set; }
+        public float Time1 { get; private set; }
 
-        public Camera(Vector3 lookFrom, Vector3 lookAt, Vector3 up, float vfov, float aspect, float aperture, float focusDistance)
+        public Camera(Vector3 lookFrom, Vector3 lookAt, Vector3 up, float vfov, float aspect, float aperture, float focusDistance, float time0, float time1)
         {
+            Time0 = time0;
+            Time1 = time1;
+
             var theta = MathUtil.DegreesToRadians(vfov);
             var halfHeight = (float)Math.Tan(theta / 2.0f);
             var halfWidth = aspect * halfHeight;
@@ -35,12 +40,12 @@ namespace RayTracing
 
         public Ray GetRay(float s, float t)
         {
-            var rd = LensRadius * Base.Random.NextInUnitDisk();
+            var rd = LensRadius * Base.Random.NextDisk();
             var offset = U * rd.X + V * rd.Y;
-
+            var time = Time0 + Base.Random.NextFloat() * (Time1 - Time0);
             // 焦点距離平面上の点は変わらず、Ray の開始地点を僅かにずらす
             // 焦点距離平面上にある物体は明瞭になり、そうでない物体はオフセットによってランダムに傾いた Ray によりボケる。
-            return new Ray(Origin + offset, LowerLeftCorner + s * Horizontal + t * Vertical - (Origin + offset));
+            return new Ray(Origin + offset, LowerLeftCorner + s * Horizontal + t * Vertical - (Origin + offset), time);
         }
     }
 }

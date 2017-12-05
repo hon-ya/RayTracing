@@ -10,25 +10,11 @@ namespace RayTracing
             return ray.Position + t * ray.Direction;
         }
 
-        public static Vector3 NextInUnitSphere(this Random random)
+        public static Vector3 NextSphere(this Random random)
         {
             while (true)
             {
-                var p = 2.0f * random.NextVector3(Vector3.Zero, Vector3.One) - Vector3.One;
-                if (p.Length() < 1.0f)
-                {
-                    return p;
-                }
-            }
-        }
-
-
-        public static Vector3 NextInUnitDisk(this Random random)
-        {
-            while (true)
-            {
-                var max = new Vector3(1.0f, 1.0f, 0.0f);
-                var p = 2.0f * random.NextVector3(Vector3.Zero, max) - max;
+                var p = random.NextVector3(-Vector3.One, Vector3.One);
                 if (Vector3.Dot(p, p) < 1.0f)
                 {
                     return p;
@@ -36,7 +22,20 @@ namespace RayTracing
             }
         }
 
-        public static float NextInUnitFloat(this Random random)
+        public static Vector3 NextDisk(this Random random)
+        {
+            while (true)
+            {
+                var max = new Vector3(1.0f, 1.0f, 0.0f);
+                var p = random.NextVector3(-max, max);
+                if (Vector3.Dot(p, p) < 1.0f)
+                {
+                    return p;
+                }
+            }
+        }
+
+        public static float NextFloat(this Random random)
         {
             return random.NextFloat(0.0f, 1.0f);
         }

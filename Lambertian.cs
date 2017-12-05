@@ -3,20 +3,20 @@ using SharpDX;
 
 namespace RayTracing
 {
-    public class Lambertian : IMaterial
+    public class Lambertian : MaterialBase
     {
-        public Vector3 Albedo { get; set; }
+        public ITexture Albedo { get; set; }
 
-        public Lambertian(Vector3 albedo)
+        public Lambertian(ITexture albedo)
         {
             Albedo = albedo;
         }
 
-        public ScatterRecord? Scatter(Ray rayIn, HitRecord hitRecord)
+        public override ScatterRecord? Scatter(Ray rayIn, HitRecord hitRecord)
         {
-            var target = hitRecord.Position + hitRecord.Normal + Base.Random.NextInUnitSphere();
-            var scattered = new Ray(hitRecord.Position, target - hitRecord.Position);
-            var attenuation = Albedo;
+            var target = hitRecord.Position + hitRecord.Normal + Base.Random.NextSphere();
+            var scattered = new Ray(hitRecord.Position, target - hitRecord.Position, rayIn.Time);
+            var attenuation = Albedo.GetValue(hitRecord.TexCoord, hitRecord.Position);
 
             return new ScatterRecord {Scattered = scattered, Attenuation = attenuation};
         }

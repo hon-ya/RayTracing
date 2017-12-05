@@ -11,5 +11,7 @@ namespace RayTracing
     public interface IMaterial
     {
         ScatterRecord? Scatter(Ray rayIn, HitRecord hitRecord);
+
+        Color3 Emitted(TexCoord texCoord, Vector3 position);
     }
 }
