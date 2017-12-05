@@ -16,7 +16,7 @@ namespace RayTracing
         public override ScatterRecord? Scatter(Ray rayIn, HitRecord hitRecord)
         {
             var reflected = Vector3.Reflect(rayIn.Direction, hitRecord.Normal);
-            var scattered = new Ray(hitRecord.Position, reflected + Fuzz * Base.Random.NextInUnitSphere());
+            var scattered = new Ray(hitRecord.Position, reflected + Fuzz * Base.Random.NextSphere());
             var attenuation = Albedo;
 
             if (Vector3.Dot(scattered.Direction, hitRecord.Normal) > 0)

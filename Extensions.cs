@@ -10,7 +10,7 @@ namespace RayTracing
             return ray.Position + t * ray.Direction;
         }
 
-        public static Vector3 NextInUnitSphere(this Random random)
+        public static Vector3 NextSphere(this Random random)
         {
             while (true)
             {
@@ -22,7 +22,7 @@ namespace RayTracing
             }
         }
 
-        public static Vector3 NextInUnitDisk(this Random random)
+        public static Vector3 NextDisk(this Random random)
         {
             while (true)
             {
@@ -35,7 +35,7 @@ namespace RayTracing
             }
         }
 
-        public static float NextInUnitFloat(this Random random)
+        public static float NextFloat(this Random random)
         {
             return random.NextFloat(0.0f, 1.0f);
         }

@@ -50,8 +50,8 @@ namespace RayTracing
 
                     for (var s = 0; s < ns; s++)
                     {
-                        var u = (1.0f * i + Base.Random.NextInUnitFloat()) / nx;
-                        var v = (1.0f * j + Base.Random.NextInUnitFloat()) / ny;
+                        var u = (1.0f * i + Base.Random.NextFloat()) / nx;
+                        var v = (1.0f * j + Base.Random.NextFloat()) / ny;
 
                         var ray = camera.GetRay(u, v);
                         color += GetColor(ray, world, 0);
@@ -231,7 +231,7 @@ namespace RayTracing
                 var z0 = -1000.0f + j * w;
                 var y0 = 0.0f;
                 var x1 = x0 + w;
-                var y1 = 100.0f * (Base.Random.NextInUnitFloat() + 0.01f);
+                var y1 = 100.0f * (Base.Random.NextFloat() + 0.01f);
                 var z1 = z0 + w;
 
                 var box = new Box(new Vector3(x0, y0, z0), new Vector3(x1, y1, z1), ground);
@@ -282,11 +282,11 @@ namespace RayTracing
             {
                 for (int b = -range; b < range; b++)
                 {
-                    var chooseMat = Base.Random.NextInUnitFloat();
+                    var chooseMat = Base.Random.NextFloat();
                     var center = new Vector3(
-                        a + 0.9f * Base.Random.NextInUnitFloat(),
+                        a + 0.9f * Base.Random.NextFloat(),
                         0.2f,
-                        b + 0.9f * Base.Random.NextInUnitFloat()
+                        b + 0.9f * Base.Random.NextFloat()
                     );
 
                     if ((center - new Vector3(4.0f, 0.2f, 0.0f)).Length() > 0.9f)
@@ -295,15 +295,15 @@ namespace RayTracing
                         {
                             var obj = new MovingSphere(
                                 center,
-                                center + new Vector3(0.0f, 0.5f * Base.Random.NextInUnitFloat(), 0.0f),
+                                center + new Vector3(0.0f, 0.5f * Base.Random.NextFloat(), 0.0f),
                                 0.0f,
                                 1.0f,
                                 0.2f,
                                 new Lambertian(
                                     new ConstantTexture(new Vector3(
-                                        Base.Random.NextInUnitFloat() * Base.Random.NextInUnitFloat(),
-                                        Base.Random.NextInUnitFloat() * Base.Random.NextInUnitFloat(),
-                                        Base.Random.NextInUnitFloat() * Base.Random.NextInUnitFloat()
+                                        Base.Random.NextFloat() * Base.Random.NextFloat(),
+                                        Base.Random.NextFloat() * Base.Random.NextFloat(),
+                                        Base.Random.NextFloat() * Base.Random.NextFloat()
                                     ))));
                             hitables.Add(obj);
                         }
@@ -314,11 +314,11 @@ namespace RayTracing
                                 0.2f,
                                 new Metal(
                                     new Vector3(
-                                        0.5f * (1 + Base.Random.NextInUnitFloat()),
-                                        0.5f * (1 + Base.Random.NextInUnitFloat()),
-                                        0.5f * (1 + Base.Random.NextInUnitFloat())
+                                        0.5f * (1 + Base.Random.NextFloat()),
+                                        0.5f * (1 + Base.Random.NextFloat()),
+                                        0.5f * (1 + Base.Random.NextFloat())
                                     ),
-                                    0.5f * Base.Random.NextInUnitFloat()
+                                    0.5f * Base.Random.NextFloat()
                                 ));
                             hitables.Add(obj);
                         }

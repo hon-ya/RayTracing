@@ -45,7 +45,7 @@ namespace RayTracing
                     // 表と裏のヒット位置から、オブジェクト内を進んだ距離を得る
                     var distanceInsideBoundary = (record2.T - record1.T) * ray.Direction.Length();
                     // オブジェクトの密度から、ヒットとするランダムな閾値を計算する
-                    var hitDistance = -(1.0f / Density) * (float)Math.Log(Base.Random.NextInUnitFloat());
+                    var hitDistance = -(1.0f / Density) * (float)Math.Log(Base.Random.NextFloat());
 
                     // 閾値を超えている場合、オブジェクトにヒットしたものとする
                     if (hitDistance < distanceInsideBoundary)

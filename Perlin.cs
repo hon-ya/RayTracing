@@ -87,7 +87,7 @@ namespace RayTracing
         {
             for (var i = p.Length - 1; i > 0; i--)
             {
-                var target = (int) (Base.Random.NextInUnitFloat() * (i + 1));
+                var target = (int) (Base.Random.NextFloat() * (i + 1));
 
                 Util.Swap(ref p[i], ref p[target]);
             }

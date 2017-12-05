@@ -13,7 +13,7 @@
         {
             return new ScatterRecord()
             {
-                Scattered = new Ray(hitRecord.Position, Base.Random.NextInUnitSphere()),
+                Scattered = new Ray(hitRecord.Position, Base.Random.NextSphere()),
                 Attenuation = Albedo.GetValue(hitRecord.TexCoord, hitRecord.Position),
             };
         }

@@ -13,7 +13,7 @@ namespace RayTracing
 
         public BvhNode(List<IHitable> hitables, float time0, float time1)
         {
-            var axis = (int) (3 * Base.Random.NextInUnitFloat());
+            var axis = (int) (3 * Base.Random.NextFloat());
 
             hitables.Sort((x, y) => BoxComparison(x, y, axis));
 
